@@ -1,0 +1,30 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>icons8-close-window-30.png</file>
+    <file>icons8-about-30 (1).png</file>
+    <file>icons8-financial-growth-analysis-30.png</file>
+    <file>icons8-combo-chart-30.png</file>
+    <file>icons8-hammer-30.png</file>
+    <file>icons8-info-30.png</file>
+    <file>icons8-verification-30.png</file>
+    <file>icons8-hammer-30.png</file>
+    <file>icons8-cloud-check-48.png</file>
+    <file>icons8-cloud-check-24.png</file>
+    <file>account-logout-64.ico</file>
+    <file>activity-feed-32.ico</file>
+    <file>activity-feed-48.ico</file>
+    <file>close-window-64.ico</file>
+    <file>dashboard-5-32.ico</file>
+    <file>dashboard-5-48.ico</file>
+    <file>group-32.ico</file>
+    <file>group-48.ico</file>
+    <file>home-4-32.ico</file>
+    <file>home-4-48.ico</file>
+    <file>Logo.png</file>
+    <file>menu-4-32.ico</file>
+    <file>product-32.ico</file>
+    <file>product-48.ico</file>
+    <file>search-13-48.ico</file>
+    <file>user-48.ico</file>
+  </qresource>
+</RCC>

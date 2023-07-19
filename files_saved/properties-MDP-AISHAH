@@ -1,0 +1,75 @@
+R{"energy_consumption"}max=? [ C<=1000 ]
+
+R{"energy_consumption"}min=? [ C<=1000 ]
+
+R{"high_scalability"}max=? [ C<=1000 ]
+
+R{"high_scalability"}min=? [ C<=1 ]
+
+R{"low_scalability"}max=? [ C<=1000 ]
+
+R{"low_scalability"}min=? [ C<=1000 ]
+
+R{"opt_scalability"}max=? [ C<=1000 ]
+
+R{"opt_scalability"}min=? [ C<=1000 ]
+
+Pmax=? [ F<=1000 u>=60&power<maxPower ]
+
+Pmin=? [ F<=1000 u>=60&power<maxPower ]
+
+Pmin=? [ F<=1000 power<=maxPower ]
+
+Pmax=? [ F<=1000 power<=maxPower ]
+
+Pmin=? [ F<=1000 power>maxPower ]
+
+Pmax=? [ F<=1000 power>maxPower ]
+
+// number of overprovision event occur 
+R{"over_provision"}max=? [ C<=1000 ]
+
+// number of overprovision event occur 
+R{"over_provision"}min=? [ C<=1000 ]
+
+// number of underprovision event occur 
+R{"under_provision"}max=? [ C<=1000 ]
+
+// number of underprovision event occur 
+R{"under_provision"}min=? [ C<=1000 ]
+
+// number of "cpu exceed target utilization" event occur 
+R{"cpu_violation"}max=? [ C<=1000 ]
+
+// number of "cpu exceed target utilization" event occur 
+R{"cpu_violation"}min=? [ C<=1000 ]
+
+// check deadlock
+filter(print, "deadlock")
+
+R{"pods"}min=? [ C<=1000 ]
+
+R{"energy_vio"}max=? [ C<=10 ]
+
+R{"scalability"}max=? [ C<=1000 ]
+
+R{"scalability"}min=? [ C<=1000 ]
+
+R{"under_provision"}max=? [ C<=1000 ]
+
+R{"under_provision"}min=? [ C<=1000 ]
+
+R{"over_provision"}max=? [ C<=1000 ]
+
+R{"over_provision"}min=? [ C<=1000 ]
+
+R{"energy_vio"}min=? [ C<=10 ]
+
+R{"energy_vio"}min=? [ C<=1000 ]
+
+R{"energy_vio"}max=? [ C<=1000 ]
+
+R{"energy_vio"}max=? [ C<=100 ]
+
+R{"energy_vio"}min=? [ C<=100 ]
+

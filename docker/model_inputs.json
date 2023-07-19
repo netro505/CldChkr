@@ -1,0 +1,4 @@
+{
+    "model_specification": "music_shuffle.nm",
+    "properties_specification": "Rmin=? [F \"found\"]"
+}
