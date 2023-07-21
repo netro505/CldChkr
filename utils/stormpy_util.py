@@ -31,7 +31,7 @@ class StormpyUtil:
     
     def check_model3(self, input_files):
         self.copy_input_files_to_docker(input_files)
-        output = DockerUtil.get_container_command_execution("stormpy-test7.py")
+        output = self.stormpy_docker.get_container_command_execution("stormpy-test7.py")
         return output
 
     def get_model_info(self, input_files):

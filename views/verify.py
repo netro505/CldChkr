@@ -83,18 +83,18 @@ class VerifyWindow(QDialog):
         # nx.draw(G, with_labels = True, node_color ='green')
 
         ax1 = self.figure.add_subplot(211)
-        x1 = list(range(0,101,10)) + [28, 42]
+        x1 = list(range(0,model_data[-1],10))
         y1 = [i**0.5 for i in x1]
 
-        ax1.axvline(x=28, color="r")
-        ax1.axvline(x=42, color="r")
+        # ax1.axvline(x=28, color="r")
+        # ax1.axvline(x=42, color="r")
         
-        ax1.set_xticks(list(range(0,101,10)) + [28,42])
-        ax1.set_xlabel('Current song number')
-        ax1.set_ylabel('Expected steps till song 42')
-        ax1.set_title("Music Shuffle")
+        ax1.set_xticks(x1)
+        ax1.set_xlabel('States')
+        ax1.set_ylabel('Expected steps')
+        # ax1.set_title("Music Shuffle")
         
-        ax1.plot(range(1, 101), model_data[1:], linewidth=2)
+        ax1.plot(range(1, model_data[-1]), model_data[1:], linewidth=2)
         # ax1.vlines(10, 0, 'r')
 
         self.canvas.draw_idle()

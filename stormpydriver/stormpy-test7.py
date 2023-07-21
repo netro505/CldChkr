@@ -1,20 +1,15 @@
 import stormpy
 import stormpy.info
+import json
 
-lines = []
-with open('model.txt') as f:
-    lines = f.readlines()
+with open('model_inputs.json', 'r') as f:
+    data = json.load(f)
 
-file_name = lines[0]
+model_specification = data["model_specification"]
+properties_specification = data["properties_specification"]
 
-prop_lines = []
-with open('prop.txt') as f:
-    prop_lines = f.readlines()
-
-prop_input = prop_lines[0]
-
-orig_program = stormpy.parse_prism_program(file_name)
-
+orig_program = stormpy.parse_prism_program(model_specification)
+orig_program = orig_program.define_constants(stormpy.parse_constants_string(orig_program.expression_manager, "init_pod=1,init_lat=1,init_cpu=1,init_demand=1,init_pow=1,init_rt=1,maxPod=3"))
 
 options = stormpy.BuilderOptions(True, True)
 options.set_build_state_valuations()
@@ -33,7 +28,7 @@ model = stormpy.build_sparse_model_with_options(orig_program, options)
 
 # print(edges)
 
-formula_str = prop_input
+formula_str = properties_specification
 
 # print(formula_str)
 

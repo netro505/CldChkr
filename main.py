@@ -54,7 +54,7 @@ class MainWindow(QMainWindow):
         # Variables
         self.path = ""
         self.data_model = []
-
+        
         # Build main window structure
         self.setWindowTitle("CloudChecker")
         self.setWindowTitle('PyQt File Dialog')
@@ -203,16 +203,17 @@ class MainWindow(QMainWindow):
             self.plot_window.show()
 
     def open_verify_window(self):
-        print(self.path, self.properties_edit.text().strip())
-        if self.path != "" and self.properties_edit.text().strip() != "":
-            print("me")
-            model_specification_file_path = self.path
+
+        if self.filename_edit.text().strip() != "":
+            model_specification_file_path = self.filename_edit.text().strip()
             properties_specification = self.properties_edit.text().strip()
 
             model_inputs = self.create_model_inputs_file(model_specification_file_path, properties_specification)
             
             verification_process_str = self.stormpyUtil.check_model3(model_inputs)
 
+            print(verification_process_str)
+            
             verification_process_list = ast.literal_eval(verification_process_str) 
 
             self.verify_result_list = verification_process_list
@@ -229,5 +230,32 @@ window.show()
 app.exec()
 
 
-# Pmax=? [F<=8 "station"]
-# Rmin=? [F "found"]
+# Pmax=? [ F ("stop")&(lat>=maxLat) ]
+
+# Pmin=? [ F ("stop"&lat>=maxLat) ]
+
+# R{"lat_violation_underProvision"}max=? [ F ("stop") ]
+
+# R{"lat_violation_underProvision"}min=? [ F ("stop") ]
+
+# R{"lat_violation_overProvision"}max=? [ F ("stop") ]
+
+# R{"lat_violation_overProvision"}min=? [ F ("stop") ]
+
+# R{"cum_reward"}max=? [ F ("stop") ]
+
+# R{"cum_reward"}min=? [ F ("stop") ]
+
+# R{"final_vm1"}max=? [ C<=1000 ]
+
+# R{"final_vm2"}max=? [ C<=1000 ]
+
+# R{"lat_violation_underProvision"}max=? [ C<=1000 ]
+
+# R{"lat_violation_underProvision"}min=? [ C<=1000 ]
+
+# R{"lat_violation_overProvision"}max=? [ C<=1000 ]
+
+# R{"lat_violation_overProvision"}min=? [ C<=1000 ]
+
+# R{"final_vm"}max=?[ F ("stop") ]

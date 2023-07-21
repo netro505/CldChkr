@@ -9,10 +9,12 @@ model_specification = data["model_specification"]
 properties_specification = data["properties_specification"]
 
 orig_program = stormpy.parse_prism_program(model_specification)
+orig_program = orig_program.define_constants(stormpy.parse_constants_string(orig_program.expression_manager, "init_pod=1,init_lat=1,init_cpu=1,init_demand=1,init_pow=1,init_rt=1,maxPod=3"))
 
 options = stormpy.BuilderOptions(True, True)
 options.set_build_state_valuations()
 options.set_build_choice_labels()
+
 model = stormpy.build_sparse_model_with_options(orig_program, options)
 print("Number of states: {}".format(model.nr_states))
 print("Number of transitions: {}".format(model.nr_transitions))

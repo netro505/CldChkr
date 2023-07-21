@@ -1,7 +1,7 @@
 mdp
 
 const init_pod; 
-const init_lat; const init_cpu; const init_demand; const init_pow;
+const init_lat; const init_cpu; const init_demand;  const init_pow;
 //const init_util; 
 const init_rt; const TAU=2;	//initial number of pods, utilization, response time, period duration
 const demand_a=100; const demand_b=200; const demand_c=300;
@@ -19,7 +19,7 @@ const maxPod;		//max threshold of pods
 const limitPod=1000;		//pod limit
 const maxLat=10;		//maximum latency (s)
 const maxRt=5;		//maximum response time (s)
-const maxTime=1000;		//maximum timestep (s)
+const maxTime;		//maximum timestep (s)
 const maxPower=249;	//maximum power (W)
 const idlePower=170;	//idle power (W)
 const up_rt=2;		//updated response time (s)
@@ -58,6 +58,7 @@ module kubelet
 	u: [0..100] init 0;
 	pow:[0..1000000] init init_pow;
 
+
 	[do_not] true -> (pod'=current_pod) & (u'=util) & (pow'=ceil(power));
 
 	[] pod>0 & pod<=50 ->0.185:(demand'=demand)&(l'=lat_a)&(u'=util_a)&(pow'=pow)  
@@ -78,8 +79,6 @@ module autoscaler
 	util:[0..100] init init_cpu;
 	//time step
 	t: [0..maxTime] init 0;
-	//action(act) : 0-add VM, 1-remove VM, 2-do nothing, 3 start
-	act:[0..3] init 3;
 	//response time
 	rt:[0..maxTime] init init_rt;
 	//update latency
@@ -87,19 +86,21 @@ module autoscaler
 	
 	//scale-in/out number of pods (default behavior) : https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#default-behavior
 
-	[scale_out] (60>=u & u<=100) & act!=1 & (pod<desired_replica) & (t+TAU<maxTime) -> 1/2:(current_pod'=desired_replica<maxPod?pod+pod:maxPod)
-							&(t'=t+TAU)&(util'=u>util? u_util:util)&(act'=0) + 1/2:(current_pod'=desired_replica<40?pod+4:pod+pod)
-							&(t'=t+TAU)&(util'=u>util? u_util:util)&(act'=0);
-//	[scale_out] (60>=u & u<=100) & act!=1 & (pod<desired_replica) & (t+TAU<maxTime) -> (current_pod'=desired_replica<40?pod+4:pod+pod)
-//							&(t'=t+TAU)&(util'=u>util? u_util:util)&(act'=0);
+	[scale_out] (60>=u & u<=100) & (pod<desired_replica) & (t+TAU<maxTime) ->  1/2:(current_pod'=desired_replica<maxPod?pod+pod:maxPod)
+	&(t'=t+TAU)&(util'=u>util? u_util:util)+ 1/2:(current_pod'=desired_replica<40?pod+4:pod+pod)&(t'=t+TAU)&(util'=u>util? u_util:util);
+
+//	[scale_out] (60>=u & u<=100)  & (pod<desired_replica) & (t+TAU<maxTime) -> (current_pod'=desired_replica<40?pod+4:pod+pod)
+//							&(t'=t+TAU)&(util'=u>util? u_util:util);
 
 	//no scaling, update current number of pods, receive new demand & utilization
-	[do_not] (40>=u & u<60) | (current_pod=maxPod) | (current_pod=desired_replica)-> (current_pod'=current_pod)&(act'=2);
-//	[update] true -> (util'=u);
+	[do_not] (40>=u & u<60) | (t=maxTime) | (current_pod=maxPod) | (current_pod=desired_replica)-> (current_pod'=current_pod);
 
-	[scale_in] (0>=u & u<60) & act!=0 & (pod>maxPod) & (t+TAU<maxTime) -> (current_pod'=desired_replica<minPod?minPod:minPod)&(t'=t+TAU)&(util'=u>util? u_util:util)&(act'=1);
+	[scale_in] (0>=u & u<60)& (pod>maxPod) & (t+TAU<maxTime) -> (current_pod'=desired_replica<minPod?minPod:minPod)&(t'=t+TAU)&(util'=u>util? u_util:util);
 
-	
+	//terminate BBS
+//	[] step=maxStep -> (step'=0);
+ 
+	 
 endmodule
 
 rewards "low_scalability"
