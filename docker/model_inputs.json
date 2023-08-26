@@ -1,4 +1,5 @@
 {
-    "model_specification": "BBA-BM.pm",
-    "properties_specification": "R{\"energy_consumption\"}max=? [ C<=1000 ]"
+    "model_specification": "BBA-6.prism",
+    "constant_variables": "minVm=5,i_vm=5,maxVm=30,maxLat=30",
+    "properties_specification": "Pmin=? [ F (\"stop\"&lat>=maxLat) ]"
 }

@@ -6,9 +6,12 @@ with open('model_inputs.json', 'r') as f:
     data = json.load(f)
 
 model_specification = data["model_specification"]
+constant_variables = data["constant_variables"]
 
 orig_program = stormpy.parse_prism_program(model_specification)
-orig_program = orig_program.define_constants(stormpy.parse_constants_string(orig_program.expression_manager, "init_pod=1,init_lat=1,init_cpu=1,init_demand=1,init_pow=1,init_rt=1,maxPod=3"))
+
+if constant_variables != "":
+    orig_program = orig_program.define_constants(stormpy.parse_constants_string(orig_program.expression_manager, constant_variables))
 
 options = stormpy.BuilderOptions(True, True)
 options.set_build_state_valuations()
@@ -26,3 +29,5 @@ for state in model.states:
             edges[int(state)].append(next_state)
 
 print(edges)
+
+# "init_pod=1,init_lat=1,init_cpu=1,init_demand=1,init_pow=1,init_rt=1,maxPod=3"

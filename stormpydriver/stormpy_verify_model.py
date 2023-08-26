@@ -7,15 +7,26 @@ with open('model_inputs.json', 'r') as f:
 
 model_specification = data["model_specification"]
 properties_specification = data["properties_specification"]
+constant_variables = data["constant_variables"]
 
 orig_program = stormpy.parse_prism_program(model_specification)
-orig_program = orig_program.define_constants(stormpy.parse_constants_string(orig_program.expression_manager, "init_pod=1,init_lat=1,init_cpu=1,init_demand=1,init_pow=1,init_rt=1,maxPod=3"))
 
-options = stormpy.BuilderOptions(True, True)
+if constant_variables != "":
+    orig_program = orig_program.define_constants(stormpy.parse_constants_string(orig_program.expression_manager, constant_variables))
+
+
+formula_str = properties_specification 
+
+# print(formula_str)
+
+properties = stormpy.parse_properties(formula_str, orig_program)
+
+options = stormpy.BuilderOptions([p.raw_formula for p in properties])
 options.set_build_state_valuations()
 options.set_build_choice_labels()
 
 model = stormpy.build_sparse_model_with_options(orig_program, options)
+
 print("Number of states: {}".format(model.nr_states))
 print("Number of transitions: {}".format(model.nr_transitions))
 print("Labels: {}\n".format(model.labeling.get_labels()))
@@ -27,17 +38,15 @@ for state in model.states:
         for transition in action.transitions:
             print("From state {} by action {}, with probability {}, go to state {}".format(state, action, transition.value(), transition.column))
 
-formula_str = properties_specification 
-
-# print(formula_str)
-
-properties = stormpy.parse_properties(formula_str, orig_program)
-
 result = stormpy.model_checking(model, properties[0])
 
 initial_state = model.initial_states[0]
-print("\nExpected number of steps to reach song 42 (from initial states): {}\n".format(result.at(initial_state)))
+print("\nExpected steps (from initial states): {}\n".format(result.at(initial_state)))
 
+for i,r in enumerate(result.get_values()):
+    print("\nExpected steps for state {}: {}".format(i,r))
+
+print("\n")
 result = stormpy.model_checking(model, properties[0], extract_scheduler=True)
 scheduler = result.scheduler
 assert scheduler.memoryless

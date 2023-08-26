@@ -7,13 +7,24 @@ with open('model_inputs.json', 'r') as f:
 
 model_specification = data["model_specification"]
 properties_specification = data["properties_specification"]
+constant_variables = data["constant_variables"]
 
 orig_program = stormpy.parse_prism_program(model_specification)
-orig_program = orig_program.define_constants(stormpy.parse_constants_string(orig_program.expression_manager, "init_pod=1,init_lat=1,init_cpu=1,init_demand=1,init_pow=1,init_rt=1,maxPod=3"))
 
-options = stormpy.BuilderOptions(True, True)
+if constant_variables != "":
+    orig_program = orig_program.define_constants(stormpy.parse_constants_string(orig_program.expression_manager, constant_variables))
+
+
+formula_str = properties_specification 
+
+# print(formula_str)
+
+properties = stormpy.parse_properties(formula_str, orig_program)
+
+options = stormpy.BuilderOptions([p.raw_formula for p in properties])
 options.set_build_state_valuations()
 options.set_build_choice_labels()
+
 model = stormpy.build_sparse_model_with_options(orig_program, options)
 
 # edges = dict()
@@ -27,12 +38,6 @@ model = stormpy.build_sparse_model_with_options(orig_program, options)
 #             edges[int(state)].append(next_state)
 
 # print(edges)
-
-formula_str = properties_specification
-
-# print(formula_str)
-
-properties = stormpy.parse_properties(formula_str, orig_program)
 
 result = stormpy.model_checking(model, properties[0], extract_scheduler=True)
 
